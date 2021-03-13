@@ -240,7 +240,6 @@ def pixel_to_class(pixel):
     Assegna ad un singolo pixel una label intera in base al
     colore di cui è stato colorato.
     """
-
     if (pixel == [255, 255, 255, 255]).all(): # pixel del vetrino
         return 0
     elif (pixel == [163, 167, 69, 255]).all(): # pixel dello strato corneo
@@ -249,8 +248,10 @@ def pixel_to_class(pixel):
         return 2
     elif (pixel == [25, 55, 190, 255]).all(): # pixel dell'epidermide
         return 3
-    else: # pixel dei vasi
+    elif (pixel == [255, 0, 255, 255]).all(): # pixel dei vasi
         return 4
+    else: # pixel dei vasi
+        raise Exception("Colore non appartenente ad alcuna classe: {}".format(pixel))
 
 
 def colimage_to_classes(img):
@@ -354,7 +355,12 @@ def postprocessing_classes(y, shape, window_size=3):
 def select_layers(layers, feature_names=[]):
     """Seleziona dall'insieme di tutte le features solo quelle il cui
     nome compare in feature_names. Se feature_names è vuota o non presente
-    vengono selezionate tutte le features in layers."""
+    vengono selezionate tutte le features in layers.
+    
+    layers: dict, dizionario delle feature/layers con le chiavi appropriate
+        (vedere feature_names nel corpo della funzione)
+    feature_names: list of str, lista dei nomi delle features che si vogliono selezionare.
+    """
     
     if len(feature_names) == 0:
         feature_names = [
